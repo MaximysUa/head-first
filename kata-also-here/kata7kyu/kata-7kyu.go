@@ -34,7 +34,6 @@ func IsLeapYear(year int) bool {
 	}
 	return false
 }
-
 func FunWithBinary(n, b int) []int {
 	var res []int
 	if b == 0 || n == 0 {
@@ -57,4 +56,16 @@ func PickGrains(grains <-chan string) (good int, bad int) {
 	}
 
 	return
+}
+func Dominator(a []int) int {
+	result := make(map[int]int)
+	for _, i := range a {
+		result[i]++
+	}
+	for i, j := range result {
+		if j > len(a)/2 {
+			return i
+		}
+	}
+	return -1
 }
