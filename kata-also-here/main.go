@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(kata6kyu.Arrange([]int{9, 7, -2, 8, 5, -3, 6, 5, 1}))
+	fmt.Println(kata6kyu.MinDistance(13013))
 }
