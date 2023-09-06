@@ -6,5 +6,19 @@ import (
 )
 
 func main() {
-	fmt.Println(kata6kyu.MinDistance(13013))
+	a := make(chan string)
+	b := make(chan string)
+
+	go func() {
+		a <- "first"
+		a <- "second"
+		a <- "third"
+		close(a)
+		close(b)
+	}()
+
+	c := kata6kyu.Merge(a, b)
+	for v := range c {
+		fmt.Println(v)
+	}
 }

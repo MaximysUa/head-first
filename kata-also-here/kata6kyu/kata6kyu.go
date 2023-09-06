@@ -3,6 +3,7 @@ package kata6kyu
 import (
 	"fmt"
 	"regexp"
+	"sync"
 )
 
 func Arrange(s []int) []int {
@@ -127,4 +128,62 @@ func MinDistance(n int) int {
 		}
 	}
 	return minNum
+}
+func Race(v1, v2, g int) [3]int {
+	if v1 >= v2 {
+		return [3]int{-1, -1, -1}
+	}
+
+	t := int(float64(g) / float64(v2-v1) * 3600.0)
+
+	h := t / 3600
+	t = t % 3600
+
+	m := t / 60
+	s := t % 60
+
+	return [3]int{h, m, s}
+}
+
+// TODO разобраться с этим
+func MergeMultiple(c ...chan string) <-chan string {
+	out := make(chan string)
+	var wg sync.WaitGroup
+	wg.Add(len(c))
+	for _, ch := range c {
+		go func(ch <-chan string) {
+			for v := range ch {
+				out <- v
+			}
+			wg.Done()
+		}(ch)
+	}
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
+	return out
+}
+func Merge(a <-chan string, b <-chan string) <-chan string {
+	out := make(chan string)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		for v := range a {
+			out <- v
+
+		}
+		wg.Done()
+		for v := range b {
+			out <- v
+
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
+	return out
 }
