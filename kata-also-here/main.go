@@ -6,19 +6,7 @@ import (
 )
 
 func main() {
-	a := make(chan string)
-	b := make(chan string)
 
-	go func() {
-		a <- "first"
-		a <- "second"
-		a <- "third"
-		close(a)
-		close(b)
-	}()
+	fmt.Println(kata6kyu.QueueTime([]int{2, 2, 3, 3, 4, 4}, 2))
 
-	c := kata6kyu.Merge(a, b)
-	for v := range c {
-		fmt.Println(v)
-	}
 }

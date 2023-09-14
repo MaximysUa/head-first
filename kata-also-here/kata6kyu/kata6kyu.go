@@ -3,6 +3,7 @@ package kata6kyu
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"sync"
 )
 
@@ -165,25 +166,55 @@ func MergeMultiple(c ...chan string) <-chan string {
 	return out
 }
 func Merge(a <-chan string, b <-chan string) <-chan string {
-	out := make(chan string)
-	var wg sync.WaitGroup
-	wg.Add(2)
+	c := make(chan string)
+	done := make(chan string)
+
 	go func() {
-		for v := range a {
-			out <- v
-
+		// consume all messages from a
+		for m := range a {
+			c <- m
 		}
-		wg.Done()
-		for v := range b {
-			out <- v
-
-		}
-		wg.Done()
+		done <- ""
 	}()
 
 	go func() {
-		wg.Wait()
-		close(out)
+		// consume all messages from b
+		for m := range b {
+			c <- m
+		}
+		done <- ""
 	}()
-	return out
+
+	go func() {
+		// wait until a and b are both closed, and then close c
+		<-done
+		<-done
+		close(c)
+	}()
+
+	return c
+}
+
+func CreateIterator(fn func(int) int, n int) func(int) int {
+	return func(i int) int {
+		count := n
+		for count > 0 {
+			i = fn(i)
+			count--
+		}
+		return i
+	}
+}
+func QueueTime(customers []int, n int) int {
+	if len(customers) == 0 {
+		return 0
+	}
+	checkout := make([]int, n)
+	for _, i := range customers {
+		slices.Sort(checkout)
+		checkout[0] += i
+
+	}
+	slices.Sort(checkout)
+	return checkout[n-1]
 }
