@@ -2,16 +2,11 @@ package adder
 
 import (
 	"context"
-	"head-first/grpc training/api/proto"
+	"head-first/grpc-training/api/proto"
 )
 
 type GRPCServer struct {
-}
-
-func (s *GRPCServer) mustEmbedUnimplementedAdderServer() {
-	//TODO implement me
-
-	panic("implement me")
+	api.UnimplementedAdderServer
 }
 
 func (s *GRPCServer) Add(ctx context.Context, req *api.AddRequest) (*api.AddResponse, error) {
